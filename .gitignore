@@ -17,3 +17,7 @@
 
 # Ignore application configuration
 /config/application.yml
+
+heroku keys:add.pub
+
+heroku keys:add 

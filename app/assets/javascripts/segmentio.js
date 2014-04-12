@@ -4,8 +4,8 @@ window.analytics = window.analytics || [];
 
 // A list of the methods in Analytics.js to stub.
 window.analytics.methods = ['identify', 'group', 'track',
-  'page', 'pageview', 'alias', 'ready', 'on', 'once', 'off',
   'trackLink', 'trackForm', 'trackClick', 'trackSubmit'];
+  'page', 'pageview', 'alias', 'ready', 'on', 'once', 'off',
 
 // Define a factory to create stubs. These are placeholders
 // for methods in Analytics.js so that you never have to wait
@@ -48,7 +48,7 @@ window.analytics.load = function(key){
 
 // Add a version to keep track of what's in the wild.
 window.analytics.SNIPPET_VERSION = '2.0.9';
- 
+
 // Load Analytics.js with your key, which will automatically
 // load the tools you've enabled for your account. Boosh!
 window.analytics.load('uioecnku9h');
@@ -58,14 +58,4 @@ window.analytics.load('uioecnku9h');
 // move this call however you'd like.
 /*  */
 window.analytics.page();
-
-// accomodate Turbolinks
-// track page views and from submissions
-$(document).on('ready page:change', function() {
-  console.log('page loaded');
-  analytics.page();
-  analytics.trackForm($('#new_visitor'), 'Signed Up');
-  analytics.trackForm($('#new_contact'), 'Contact Request');
-})
-
 </script>

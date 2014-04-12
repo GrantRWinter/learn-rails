@@ -58,4 +58,14 @@ window.analytics.load('uioecnku9h');
 // move this call however you'd like.
 /*  */
 window.analytics.page();
+
+// accomodate Turbolinks
+// track page views and from submissions
+$(document).on('ready page:change', function() {
+  console.log('page loaded');
+  analytics.page();
+  analytics.trackForm($('#new_visitor'), 'Signed Up');
+  analytics.trackForm($('#new_contact'), 'Contact Request');
+})
+
 </script>

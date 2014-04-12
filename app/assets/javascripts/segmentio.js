@@ -1,18 +1,17 @@
-<script type="text/javascript">
-// Create a queue, but don't obliterate an existing one!
-window.analytics = window.analytics || [];
+/ Create a queue, but don't obliterate an existing one!
+window.analytics || (window.analytics = []);
 
-// A list of the methods in Analytics.js to stub.
-window.analytics.methods = ['identify', 'group', 'track',
-  'trackLink', 'trackForm', 'trackClick', 'trackSubmit'];
-  'page', 'pageview', 'alias', 'ready', 'on', 'once', 'off',
+// A list of all the methods in analytics.js that we want to stub.
+window.analytics.methods = ['identify', 'track', 'trackLink', 'trackForm',
+'trackClick', 'trackSubmit', 'page', 'pageview', 'ab', 'alias', 'ready',
+'group', 'on', 'once', 'off'];
 
-// Define a factory to create stubs. These are placeholders
-// for methods in Analytics.js so that you never have to wait
-// for it to load to actually record data. The `method` is
-// stored as the first argument, so we can replay the data.
-window.analytics.factory = function(method){
-  return function(){
+// Define a factory to create queue stubs. These are placeholders for the
+// "real" methods in analytics.js so that you never have to wait for the library
+// to load asynchronously to actually track things. The `method` is always the
+// first argument, so we know which method to replay the call into.
+window.analytics.factory = function (method) {
+  return function () {
     var args = Array.prototype.slice.call(arguments);
     args.unshift(method);
     window.analytics.push(args);
@@ -20,42 +19,40 @@ window.analytics.factory = function(method){
   };
 };
 
-// For each of our methods, generate a queueing stub.
+// For each of our methods, generate a queueing method.
 for (var i = 0; i < window.analytics.methods.length; i++) {
-  var key = window.analytics.methods[i];
-  window.analytics[key] = window.analytics.factory(key);
+  var method = window.analytics.methods[i];
+  window.analytics[method] = window.analytics.factory(method);
 }
 
-// Define a method to load Analytics.js from our CDN,
-// and that will be sure to only ever load it once.
-window.analytics.load = function(key){
-  if (document.getElementById('analytics-js')) return;
+// Define a method that will asynchronously load analytics.js from our CDN.
+window.analytics.load = function (apiKey) {
 
-  // Create an async script element based on your key.
+  // Create an async script element for analytics.js based on your API key.
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.id = 'analytics-js';
   script.async = true;
-  script.src = ('https:' === document.location.protocol
-    ? 'https://' : 'http://')
-    + 'cdn.segment.io/analytics.js/v1/'
-    + key + '/analytics.min.js';
+  script.src = ('https:' === document.location.protocol ? 'https://' : 'http://') +
+                'd2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/' + apiKey + '/analytics.min.js';
 
-  // Insert our script next to the first script element.
-  var first = document.getElementsByTagName('script')[0];
-  first.parentNode.insertBefore(script, first);
+  // Find the first script element on the page and insert our script next to it.
+  var firstScript = document.getElementsByTagName('script')[0];
+  firstScript.parentNode.insertBefore(script, firstScript);
 };
 
-// Add a version to keep track of what's in the wild.
-window.analytics.SNIPPET_VERSION = '2.0.9';
+// Add a version so we can keep track of what's out there in the wild.
+window.analytics.SNIPPET_VERSION = '2.0.6';
 
-// Load Analytics.js with your key, which will automatically
-// load the tools you've enabled for your account. Boosh!
+// Load analytics.js with your API key, which will automatically load all of the
+// analytics integrations you've turned on for your account. Boosh!
 window.analytics.load('uioecnku9h');
 
-// Make the first page call to load the integrations. If
-// you'd like to manually name or tag the page, edit or
-// move this call however you'd like.
-/*  */
+// Make our first page call to load the integrations. If you'd like to manually
+// name or tag the page, edit or move this call to use your own tags.
 window.analytics.page();
-</script>
+$(document).on('ready page:load', function() {
+  console.log('page loaded');
+  analytics.page();
+  analytics.trackForm($('#new_visitor'), 'Signed Up');
+  analytics.trackForm($('#new_contact'), 'Contact Request');
+})
